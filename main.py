@@ -10,13 +10,28 @@ class Elevator:
         self.direction = 0
         self.curr_floor = 0
 
+    def next(self):
+        pass
+
+    def called_floor(self, floor: int):
+        pass
+
+    def pressed_floor(self, floor: int):
+        pass
+
 
 def print_state(state: Elevator) -> None:
     print(f"Current floor: {state.curr_floor}")
     print(f"Direction: {state.direction}")
 
 
-def evaluate_changes(state, changes: str) -> Elevator:
+def evaluate_changes(state: Elevator, changes: str) -> Elevator:
+    if changes == "next":
+        state.next()
+    elif changes.split()[0] == "call":
+        state.called_floor(changes.split()[1])
+    elif changes.split()[0] == "press":
+        state.pressed_floor(changes.split()[1])
     return state
 
 
