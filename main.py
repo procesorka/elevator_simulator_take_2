@@ -29,9 +29,11 @@ def evaluate_changes(state: Elevator, changes: str) -> Elevator:
     if changes == "next":
         state.next()
     elif changes.split()[0] == "call":
-        state.called_floor(changes.split()[1])
+        desired_floor = int(changes.split()[1])
+        state.called_floor(desired_floor)
     elif changes.split()[0] == "press":
-        state.pressed_floor(changes.split()[1])
+        desired_floor = int(changes.split()[1])
+        state.pressed_floor(desired_floor)
     return state
 
 
