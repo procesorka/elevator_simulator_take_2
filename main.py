@@ -1,23 +1,6 @@
 #!/usr/bin/env python3
 
-class Elevator:
-    def __init__(self, min_floor=0, max_floor=5):
-        if max_floor <= min_floor:
-            raise Exception("Max_floor must be greater then min_floor.")
-        self.min_floor = min_floor
-        self.max_floor = max_floor
-        self.occupancy = False
-        self.direction = 0
-        self.curr_floor = 0
-
-    def next(self):
-        pass
-
-    def called_floor(self, floor: int):
-        pass
-
-    def pressed_floor(self, floor: int):
-        pass
+from elevator import Elevator, DumbElevator, SmartElevator
 
 
 def print_state(state: Elevator) -> None:
@@ -43,7 +26,11 @@ def read_changes() -> str:
 
 
 if __name__ == "__main__":
-    state = Elevator()
+    elevator_type = 1
+    if elevator_type == 1:
+        state = DumbElevator()
+    else:
+        state = SmartElevator()
     print_state(state)
 
     # This is an:
