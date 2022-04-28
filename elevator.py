@@ -70,3 +70,6 @@ class DumbElevator(Elevator):
 class SmartElevator(Elevator):
     def __init__(self, min_floor=0, max_floor=5):
         super().__init__(min_floor, max_floor)
+
+    def display(self):
+        return f"Floor: {self.curr_floor}\nDirection: {self.direction}"
