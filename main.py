@@ -8,14 +8,24 @@ def print_state(state: Elevator) -> None:
 
 
 def evaluate_changes(state: Elevator, changes: str) -> Elevator:
-    if changes == "next":
+    if changes == "":
         state.next()
-    elif changes.split()[0] == "call":
-        desired_floor = int(changes.split()[1])
-        state.called_floor(desired_floor)
-    elif changes.split()[0] == "press":
-        desired_floor = int(changes.split()[1])
-        state.pressed_floor(desired_floor)
+    elif changes == "in":
+        state.people_in()
+    elif changes == "out":
+        state.people_out()
+    elif " " in changes and len(changes.split()) == 2:
+        try:
+            desired_floor = int(changes.split()[1])
+        except ValueError:
+            print("Floor must be a number!")
+        else:
+            if changes.split()[0].lower() == "press":
+                state.pressed_floor(desired_floor)
+            elif changes.split()[0].lower() == "call":
+                state.called_floor(desired_floor)
+    else:
+        print("Unknown command!")
     return state
 
 
