@@ -4,8 +4,7 @@ from elevator import Elevator, DumbElevator, SmartElevator
 
 
 def print_state(state: Elevator) -> None:
-    print(f"Current floor: {state.curr_floor}")
-    print(f"Direction: {state.direction}")
+    print(state.display())
 
 
 def evaluate_changes(state: Elevator, changes: str) -> Elevator:
