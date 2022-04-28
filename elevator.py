@@ -41,7 +41,7 @@ class DumbElevator(Elevator):
         self.destination_floor = 0
 
     def display(self):
-        available = self.direction == 0 and self.occupancy == False
+        available = self.direction == 0 and self.occupancy is False
         return f"Floor: {self.curr_floor}\nAvailable: {available}"
 
     def next(self):
@@ -52,7 +52,7 @@ class DumbElevator(Elevator):
 
     def called_floor(self, floor_called: int):
         if self.is_valid_floor(floor_called):
-            if self.direction == 0 and self.occupancy == False and floor_called != self.curr_floor:
+            if self.direction == 0 and self.occupancy is False and floor_called != self.curr_floor:
                 self.destination_floor = floor_called
                 self.direction = 1 if self.destination_floor > self.curr_floor else -1
         else:
@@ -60,7 +60,7 @@ class DumbElevator(Elevator):
 
     def pressed_floor(self, floor_pressed: int):
         if self.is_valid_floor(floor_pressed):
-            if self.direction == 0 and self.occupancy == True and floor_pressed != self.curr_floor:
+            if self.direction == 0 and self.occupancy is True and floor_pressed != self.curr_floor:
                 self.destination_floor = floor_pressed
                 self.direction = 1 if self.destination_floor > self.curr_floor else -1
         else:
