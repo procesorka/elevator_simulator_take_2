@@ -27,12 +27,10 @@ class Elevator:
         pass
 
     def people_in(self):
-        if self.direction == 0:
-            self.occupancy = True
+        pass
 
     def people_out(self):
-        if self.direction == 0:
-            self.occupancy = False
+        pass
 
 
 class DumbElevator(Elevator):
@@ -66,6 +64,14 @@ class DumbElevator(Elevator):
         else:
             print(f"The {floor_pressed} floor doesn't exist in this building!")
 
+    def people_in(self):
+        if self.direction == 0:
+            self.occupancy = True
+
+    def people_out(self):
+        if self.direction == 0:
+            self.occupancy = False
+
 
 class SmartElevator(Elevator):
     def __init__(self, min_floor=0, max_floor=5):
@@ -73,3 +79,11 @@ class SmartElevator(Elevator):
 
     def display(self):
         return f"Floor: {self.curr_floor}\nDirection: {self.direction}"
+    def people_in(self):
+        if self.direction == 0:
+            self.occupancy = True
+
+    def people_out(self):
+        if self.direction == 0:
+            self.occupancy = False
+    
