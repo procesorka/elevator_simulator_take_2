@@ -35,8 +35,8 @@ def read_changes() -> str:
 
 
 if __name__ == "__main__":
-    elevator_type = 1
-    if elevator_type == 1:
+    elevator_type = 0
+    if elevator_type == 0:
         state = DumbElevator()
     else:
         state = SmartElevator()
