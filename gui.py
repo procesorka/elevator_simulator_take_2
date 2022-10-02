@@ -25,13 +25,14 @@ class Interface:
 
         self.outside_floor_buttons = []
         self.inside_floor_buttons = []
+
         for floor_num in self._elevator.all_floors():
-            command_out = lambda temp=floor_num: self._floor_called(temp, self.outside_floor_buttons[temp])
+            command_out = (lambda temp=floor_num: self._floor_called(temp, self.outside_floor_buttons[temp]))
             button = Button(text=f"{floor_num}", command=command_out)
             button.grid(row=self._elevator.max_floor - floor_num + 1, column=0, padx=30, pady=10)
             self.outside_floor_buttons.append(button)
 
-            command_in = lambda temp=floor_num: self._floor_pressed(temp, self.inside_floor_buttons[temp])
+            command_in = (lambda temp=floor_num: self._floor_pressed(temp, self.inside_floor_buttons[temp]))
             button = Button(text=f"{floor_num}", command=command_in)
             button.grid(row=self._elevator.max_floor - floor_num + 1, column=2, padx=30, pady=10)
             self.inside_floor_buttons.append(button)

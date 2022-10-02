@@ -18,10 +18,10 @@ class Elevator:
     def next(self):
         pass
 
-    def called_floor(self, floor_called: int):
+    def called_floor(self, floor_called: int, direction_called: {-1, 0, 1}) -> bool:
         pass
 
-    def pressed_floor(self, floor_pressed: int):
+    def pressed_floor(self, floor_pressed: int) -> bool:
         pass
 
     def display(self):
@@ -51,24 +51,18 @@ class DumbElevator(Elevator):
         self.direction = 0
         return False
 
-    def called_floor(self, floor_called: int) -> bool:
-        if self.is_valid_floor(floor_called):
-            if self.direction == 0 and self.occupancy is False and floor_called != self.curr_floor:
-                self.destination_floor = floor_called
-                self.direction = 1 if self.destination_floor > self.curr_floor else -1
-                return True
-            return False
-        print(f"The {floor_called} floor doesn't exist in this building!")
+    def called_floor(self, floor_called: int, direction_called=0) -> bool:
+        if self.direction == 0 and self.occupancy is False and floor_called != self.curr_floor:
+            self.destination_floor = floor_called
+            self.direction = 1 if self.destination_floor > self.curr_floor else -1
+            return True
         return False
 
     def pressed_floor(self, floor_pressed: int) -> bool:
-        if self.is_valid_floor(floor_pressed):
-            if self.direction == 0 and self.occupancy is True and floor_pressed != self.curr_floor:
-                self.destination_floor = floor_pressed
-                self.direction = 1 if self.destination_floor > self.curr_floor else -1
-                return True
-            return False
-        print(f"The {floor_pressed} floor doesn't exist in this building!")
+        if self.direction == 0 and self.occupancy is True and floor_pressed != self.curr_floor:
+            self.destination_floor = floor_pressed
+            self.direction = 1 if self.destination_floor > self.curr_floor else -1
+            return True
         return False
 
     def people_in(self):
@@ -84,37 +78,41 @@ class SmartElevator(Elevator):
     def __init__(self, min_floor=0, max_floor=5):
         super().__init__(min_floor, max_floor)
         self.type = "Smart elevator"
-        self.direction = 0
         self.general_direction = 1
-        self.floors_to_visit = [0]*(self.max_floor - self.min_floor)
+        self.floors_to_visit = [0]*(self.max_floor - self.min_floor + 1)
 
     def display(self):
-        return f"Floor: {self.curr_floor}\nDirection: {self.direction}\n{self.floors_to_visit}"
+        return f"Floor: {self.curr_floor}\nDirection: {self.direction}\n" \
+               f"General direction: {self.general_direction}\nOccupancy: {self.occupancy}\n{self.floors_to_visit}"
 
     def next(self):
-        if self.curr_floor == self.max_floor or self.curr_floor == self.min_floor:
-            self.direction *= -1
+        if (self.curr_floor == self.max_floor and self.general_direction == 1) or \
+                (self.curr_floor == self.min_floor and self.general_direction == -1):
+            self.general_direction *= -1
 
-        if self.floors_to_visit[self.curr_floor - self.min_floor] == 1:
+        self.direction = self.general_direction
+
+        if self.floors_to_visit[self.curr_floor - self.min_floor] != 0:
             self.floors_to_visit[self.curr_floor - self.min_floor] = 0
+            self.direction = 0
         else:
             self.curr_floor += self.direction
 
-    def called_floor(self, floor_called: int):
-        if self.is_valid_floor(floor_called):
-            if floor_called != self.curr_floor:
-                self.floors_to_visit[floor_called - self.min_floor] = 1
-        else:
-            print(f"The {floor_called} floor doesn't exist in this building!")
+    def called_floor(self, floor_called: int, direction_called: {-1, 1}) -> bool:
+        if floor_called == self.curr_floor and direction_called == self.general_direction:
+            return False
+        self.floors_to_visit[floor_called - self.min_floor] = direction_called
+        if not any(self.floors_to_visit):
+            self.direction = self.general_direction = direction_called
+        return True
 
-    def pressed_floor(self, floor_pressed: int):
-        if self.is_valid_floor(floor_pressed):
-            if self.occupancy is True and floor_pressed != self.curr_floor:
-                self.floors_to_visit[floor_pressed - self.min_floor] = 1
-                # if any(self.floors_to_visit):
-
-        else:
-            print(f"The {floor_pressed} floor doesn't exist in this building!")
+    def pressed_floor(self, floor_pressed: int) -> bool:
+        if self.occupancy is True and floor_pressed != self.curr_floor:
+            future_direction = 1 if floor_pressed > self.curr_floor else -1
+            print(future_direction)
+            self.floors_to_visit[floor_pressed - self.min_floor] = future_direction
+            return True
+        return False
 
     def people_in(self):
         if self.direction == 0:

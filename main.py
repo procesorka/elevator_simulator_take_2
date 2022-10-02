@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 
 from elevator import Elevator, DumbElevator, SmartElevator
 
@@ -14,16 +15,29 @@ def evaluate_changes(state: Elevator, changes: str) -> Elevator:
         state.people_in()
     elif changes == "out":
         state.people_out()
-    elif " " in changes and len(changes.split()) == 2:
+    elif " " in changes and len(changes.split()) >= 2:
         try:
             desired_floor = int(changes.split()[1])
         except ValueError:
             print("Floor must be a number!")
         else:
-            if changes.split()[0].lower() == "press":
-                state.pressed_floor(desired_floor)
-            elif changes.split()[0].lower() == "call":
-                state.called_floor(desired_floor)
+            if state.is_valid_floor(desired_floor):
+                if changes.split()[0].lower() == "press":
+                    state.pressed_floor(desired_floor)
+                elif changes.split()[0].lower() == "call":
+                    try:
+                        direction_called = int(changes.split()[2])
+                    except IndexError:
+                        state.called_floor(desired_floor, 1)
+                    except ValueError:
+                        print("Direction must be 1 for up or -1 for down.")
+                    else:
+                        if direction_called in {1, -1}:
+                            state.called_floor(desired_floor, direction_called)
+                        else:
+                            print("Direction must be 1 for up or -1 for down.")
+            else:
+                print(f"The {desired_floor} floor doesn't exist in this building!")
     else:
         print("Unknown command!")
     return state
@@ -35,8 +49,7 @@ def read_changes() -> str:
 
 
 if __name__ == "__main__":
-    elevator_type = 0
-    if elevator_type == 0:
+    if sys.argv[1] == "dumb":
         state = DumbElevator()
     else:
         state = SmartElevator()
